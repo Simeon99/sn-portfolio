@@ -51,19 +51,23 @@ export default function ProjectsPage() {
             <Link href="/" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
               Home
             </Link>
+            <Link href="/about" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
+              About
+            </Link>
             <span aria-current="page" className="text-neutral-950">
               Projects
             </span>
-            <Link href="/#pricing" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
+            <Link href="/#pricing" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
               Pricing
             </Link>
-            <Link href="/#contact" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
+            <Link href="/#contact" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
               Contact
             </Link>
           </nav>
 
           <Link
             href="/#contact"
+            scroll={false}
             className="text-sm font-bold tracking-wide uppercase transition-colors duration-200 ease-out hover:text-[#d8472b]"
           >
             Get in touch

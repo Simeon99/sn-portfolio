@@ -7,7 +7,7 @@ import { projects } from "@/data/projects";
 const PARALLAX_PX = 60;
 
 const navLinks = [
-  { label: "About", href: "#" },
+  { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Contact", href: "#contact" },
 ];

@@ -1,11 +1,11 @@
+import Link from "next/link";
 import { projects } from "@/data/projects";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "About", href: "#" },
+  { label: "About", href: "/about" },
   { label: "Projects", href: "/projects", meta: `(${projects.length})` },
-  { label: "Blog", href: "#" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export function MenuOverlay({
@@ -19,10 +19,10 @@ export function MenuOverlay({
     <div
       aria-hidden={!open}
       inert={!open ? true : undefined}
-      className={`absolute inset-x-0 top-0 z-30 flex min-h-[65vh] flex-col bg-[#d8472b] px-6 pt-6 pb-10 text-white transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] sm:px-10 ${
+      className={`absolute inset-x-0 top-0 z-30 flex min-h-[65vh] flex-col overflow-hidden bg-[#d8472b] px-6 pt-6 pb-10 text-white transition-[clip-path,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] sm:px-10 ${
         open
-          ? "translate-y-0 opacity-100 duration-[380ms]"
-          : "pointer-events-none -translate-y-4 opacity-0 duration-[220ms]"
+          ? "opacity-100 duration-[420ms] [clip-path:inset(0_0_0%_0)]"
+          : "pointer-events-none opacity-0 duration-[260ms] [clip-path:inset(0_0_100%_0)]"
       }`}
     >
       <div className="flex items-start justify-between">
@@ -44,16 +44,18 @@ export function MenuOverlay({
 
       <nav className="absolute top-24 right-6 flex flex-col items-end gap-3 text-2xl font-bold sm:right-10 sm:text-3xl">
         {navItems.map((item, i) => (
-          <a
+          <Link
             key={item.label}
             href={item.href}
+            scroll={!item.href.includes("#")}
+            onClick={onClose}
             style={{ transitionDelay: open ? `${80 + i * 40}ms` : "0ms" }}
             className={`transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-white/70 ${
               open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
             }`}
           >
             {item.label} {item.meta}
-          </a>
+          </Link>
         ))}
       </nav>
 
