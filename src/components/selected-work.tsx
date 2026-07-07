@@ -1,117 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
-const PLACEHOLDER_IMAGE_1 = "/images/duo-iphone-17-pro-silver-mockup.jpg";
-const PLACEHOLDER_IMAGE_2 = "/images/studio-display-xdr-mockup-floating.jpg";
-const PLACEHOLDER_IMAGE_3 = "/images/iphone 17 Pro.png";
-const PLACEHOLDER_IMAGE_4 = "/images/maneken-PS93.jpg";
-
-const projects = [
-  {
-    title: "Smokvica",
-    description:
-      "Social media management and ad campaigns for this beloved restaurant in Belgrade.",
-    tags: ["Social Media", "Ads"],
-    image: PLACEHOLDER_IMAGE_1,
-    size: "sm" as const,
-  },
-  {
-    title: "Mista Osteria",
-    description:
-      "A new website and social media presence for this osteria, built to fill tables and grow its following.",
-    tags: ["Web Design", "Development", "Social Media", "Ads"],
-    image: PLACEHOLDER_IMAGE_4,
-    size: "sm" as const,
-  },
-  {
-    title: "Euro Duo Kalem",
-    description:
-      "A modern, multilingual website and digital presence built to showcase premium fruit seedlings and connect with buyers worldwide.",
-    tags: ["Web Design", "Development", "Social Media", "Paid Ads"],
-    image: PLACEHOLDER_IMAGE_2,
-    size: "lg" as const,
-  },
-
-  {
-    title: "Naše Vino social media",
-    description:
-      "Instagram strategy, content and paid campaigns built to grow the brand and reach more wine lovers.",
-    tags: ["Social Media", "Content", "Paid Ads"],
-    image: PLACEHOLDER_IMAGE_3,
-    size: "lg" as const,
-  },
-
-  {
-    title: "Smokvica",
-    description:
-      "Social media management and ad campaigns for this beloved restaurant in Belgrade.",
-    tags: ["Social Media", "Ads"],
-    image: PLACEHOLDER_IMAGE_1,
-    size: "sm" as const,
-  },
-];
-
-function reveal(hasEntered: boolean, delay: number) {
-  return {
-    style: { transitionDelay: hasEntered ? `${delay}ms` : "0ms" },
-    className: `transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${hasEntered
-      ? "translate-y-0 opacity-100"
-      : "translate-y-10 opacity-0 motion-reduce:translate-y-0"
-      }`,
-  };
-}
-
-function ProjectCard({
-  project,
-  hasEntered,
-  delay,
-}: {
-  project: (typeof projects)[number];
-  hasEntered: boolean;
-  delay: number;
-}) {
-  return (
-    <a
-      href="#"
-      style={reveal(hasEntered, delay).style}
-      className={`group block ${reveal(hasEntered, delay).className}`}
-    >
-      <div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-neutral-100">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          sizes="(min-width: 1024px) 45vw, 90vw"
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#d8472b] opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-        >
-          ↗
-        </span>
-      </div>
-      <h3 className="mt-6 text-lg font-bold text-neutral-950 transition-colors duration-200 ease-out group-hover:text-[#d8472b]">
-        {project.title}
-      </h3>
-      <p className="mt-2 max-w-sm text-sm text-neutral-500">
-        {project.description}
-      </p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full border border-neutral-200 px-3 py-1 text-xs font-semibold tracking-wide text-neutral-600 uppercase"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-    </a>
-  );
-}
+import { projects, type Project } from "@/data/projects";
+import { ProjectCard, reveal } from "@/components/project-card";
 
 function ProjectRow({
   lg,
@@ -119,8 +10,8 @@ function ProjectRow({
   hasEntered,
   delay,
 }: {
-  lg: (typeof projects)[number];
-  sm: (typeof projects)[number];
+  lg: Project;
+  sm: Project;
   hasEntered: boolean;
   delay: number;
 }) {
@@ -219,7 +110,7 @@ export function SelectedWork() {
             className={`mt-16 flex justify-end sm:mt-20 ${reveal(hasEntered, 480).className}`}
           >
             <a
-              href="#"
+              href="/projects"
               className="group inline-flex items-center gap-2 text-lg font-semibold text-neutral-950 transition-colors duration-200 ease-out hover:text-[#d8472b]"
             >
               <span
@@ -229,7 +120,7 @@ export function SelectedWork() {
                 →
               </span>
               All cases
-              <sup className="text-xs font-bold text-[#d8472b]">(17)</sup>
+              <sup className="text-xs font-bold text-[#d8472b]">({projects.length})</sup>
             </a>
           </div>
         </div>

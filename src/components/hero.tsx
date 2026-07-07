@@ -2,10 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MenuOverlay } from "@/components/menu-overlay";
+import { projects } from "@/data/projects";
 
 const PARALLAX_PX = 60;
 
-const navLinks = ["About", "Projects", "Contact"];
+const navLinks = [
+  { label: "About", href: "#" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact", href: "#contact" },
+];
 
 const services = [
   "Content & Video Production",
@@ -83,14 +88,19 @@ export function Hero() {
 
           <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
             {navLinks.map((link) => (
-              <a key={link} href="#" className="transition-colors hover:text-cyan-200">
-                {link}
+              <a key={link.label} href={link.href} className="transition-colors hover:text-cyan-200">
+                {link.label}
               </a>
             ))}
           </nav>
 
           <div className="flex items-center gap-4">
-            <span className="hidden font-mono text-xl text-cyan-300 sm:inline">(17)</span>
+            <a
+              href="/projects"
+              className="hidden font-mono text-xl text-cyan-300 transition-colors hover:text-cyan-200 sm:inline"
+            >
+              ({projects.length})
+            </a>
             <button
               onClick={() => setMenuOpen(true)}
               className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95"

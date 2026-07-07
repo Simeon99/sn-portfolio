@@ -1,7 +1,9 @@
+import { projects } from "@/data/projects";
+
 const navItems = [
-  { label: "Home", href: "#" },
+  { label: "Home", href: "/" },
   { label: "About", href: "#" },
-  { label: "Projects", href: "#", meta: "(17)" },
+  { label: "Projects", href: "/projects", meta: `(${projects.length})` },
   { label: "Blog", href: "#" },
   { label: "Contact", href: "#contact" },
 ];
