@@ -56,7 +56,10 @@ export function Hero() {
     // its containing block is <main> (the whole page), so it remains an
     // active sticky layer for the entire scroll, which is what caused it
     // to flicker back into view over unrelated sections on iOS Safari.
-    <div className="relative h-[200vh]">
+    // The negative margin cancels the extra height so Stats still starts
+    // immediately after the hero (same reveal timing as before) instead
+    // of leaving a dead gap before it arrives.
+    <div className="relative h-[200vh] -mb-[100vh]">
       <section
         ref={sectionRef}
         className="sticky top-0 isolate z-0 flex h-screen w-full flex-col overflow-hidden bg-neutral-950 text-white"
