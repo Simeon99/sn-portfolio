@@ -120,7 +120,7 @@ export function Stats() {
           observer.disconnect();
         }
       },
-      { threshold: 0.5 },
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" },
     );
 
     observer.observe(el);
