@@ -162,8 +162,14 @@ export function SelectedWork() {
   return (
     <section className="relative z-10 bg-white">
       {/* Pinned title — sits behind the cards (lower z-index), so it's
-          gradually covered as the grid scrolls up over it. */}
-      <div className="sticky top-0 z-0 flex min-h-[70vh] flex-col items-center justify-center gap-6 px-6 py-24 text-center">
+          gradually covered as the grid scrolls up over it. Forced onto
+          its own GPU layer (translateZ) because iOS Safari can lag a
+          frame behind on fast/flick scrolls and briefly paint sticky
+          elements above content that should be covering them. */}
+      <div
+        style={{ transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}
+        className="sticky top-0 z-0 flex min-h-[70vh] flex-col items-center justify-center gap-6 px-6 py-24 text-center will-change-transform"
+      >
         <span className="flex items-center gap-2 text-sm font-semibold tracking-wide text-neutral-500 uppercase">
           <span aria-hidden="true" className="text-[#d8472b]">
             ⌐
@@ -180,7 +186,11 @@ export function SelectedWork() {
         </span>
       </div>
 
-      <div ref={gridRef} className="relative z-10">
+      <div
+        ref={gridRef}
+        style={{ transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}
+        className="relative z-10 will-change-transform"
+      >
         {/* Soft fade mask — lets the pinned title dissolve into white
             before any card edge reaches it, instead of being cut off
             by a hard line. */}

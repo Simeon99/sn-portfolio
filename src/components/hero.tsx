@@ -62,7 +62,8 @@ export function Hero() {
     <div className="relative h-[200vh] -mb-[100vh]">
       <section
         ref={sectionRef}
-        className="sticky top-0 isolate z-0 flex h-screen w-full flex-col overflow-hidden bg-neutral-950 text-white"
+        style={{ transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}
+        className="sticky top-0 isolate z-0 flex h-screen w-full flex-col overflow-hidden bg-neutral-950 text-white will-change-transform"
       >
         {/* Placeholder duotone background — swap for a real photo later */}
         <div
