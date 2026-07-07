@@ -11,12 +11,6 @@ const PLACEHOLDER_IMAGE_4 = "/images/5c351ae15cc42d7d58525f48faa0e9a9.jpg";
 
 const services = [
   {
-    label: "Video & Photo",
-    description:
-      "We produce cinematic video and photo content that captures attention and tells your brand's story.",
-    image: PLACEHOLDER_IMAGE_1,
-  },
-  {
     label: "Social & Ads",
     description:
       "We plan, create, and run social content and ad campaigns that turn scrolls into results.",
@@ -27,6 +21,12 @@ const services = [
     description:
       "We design and build fast, modern websites that convert visitors into customers.",
     image: PLACEHOLDER_IMAGE_2,
+  },
+  {
+    label: "Video & Photo",
+    description:
+      "We produce cinematic video and photo content that captures attention and tells your brand's story.",
+    image: PLACEHOLDER_IMAGE_1,
   },
   {
     label: "Design & Copy",
@@ -65,7 +65,7 @@ export function ServicesList() {
   }, []);
 
   return (
-    <section className="relative z-10 bg-neutral-950 px-6 py-24 text-white sm:px-10">
+    <section className="relative z-10 overflow-x-hidden bg-neutral-950 px-6 py-24 text-white sm:px-10">
       <div className="flex items-center justify-between">
         <span className="text-lg font-bold tracking-tight">
           S&N<sup className="text-xs">®</sup>
@@ -115,16 +115,21 @@ export function ServicesList() {
                 }`}
             >
               <span
-                className={`text-4xl font-medium tracking-[-0.07em] leading-[1.1] transition-all duration-300 group-hover:translate-x-2 sm:text-[102px] ${i === active ? "text-white" : "text-neutral-800"
+                className={`min-w-0 shrink text-[clamp(2.25rem,6.5vw,102px)] font-medium tracking-[-0.07em] leading-[1.1] transition-all duration-300 group-hover:translate-x-2 ${i === active ? "text-white" : "text-neutral-800"
                   }`}
               >
                 {service.label}
               </span>
-              <span
-                className={`text-sm font-semibold transition-colors duration-300 ${i === active ? "text-[#d8472b]" : "text-neutral-700"
-                  }`}
-              >
-                {`{ 0${i + 1} }`}
+              <span className={`shrink-0 text-sm font-semibold transition-colors duration-300 ${i === active ? "" : "text-neutral-700"}`}>
+                {i === active ? (
+                  <>
+                    <span className="text-[#d8472b]">{"{ "}</span>
+                    <span className="text-white">{`0${i + 1}`}</span>
+                    <span className="text-[#d8472b]">{" }"}</span>
+                  </>
+                ) : (
+                  `{ 0${i + 1} }`
+                )}
               </span>
             </button>
           ))}
