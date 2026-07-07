@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Footer } from "@/components/footer";
+import { MenuOverlay } from "@/components/menu-overlay";
 import { reveal } from "@/components/project-card";
 
 const team = [
@@ -27,6 +28,7 @@ const team = [
 
 export default function AboutPage() {
   const [hasEntered, setHasEntered] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const introRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,34 +57,40 @@ export default function AboutPage() {
   return (
     <>
       <main className="flex-1 bg-white text-neutral-950">
-        <header className="flex items-center justify-between px-6 py-6 sm:px-10">
-          <Link href="/" className="text-lg font-bold tracking-tight">
-            S&N<sup className="text-xs">®</sup>
-          </Link>
+        <div className="relative">
+          <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
+            <Link href="/" className="text-lg font-bold tracking-tight">
+              S&N<sup className="text-xs">®</sup>
+            </Link>
 
-          <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
-            <Link href="/" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-              Home
-            </Link>
-            <span aria-current="page" className="text-neutral-950">
-              About
-            </span>
-            <Link href="/projects" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-              Projects
-            </Link>
-            <Link href="/#contact" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-              Contact
-            </Link>
-          </nav>
+            <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
+              <Link href="/" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
+                Home
+              </Link>
+              <span aria-current="page" className="text-neutral-950">
+                About
+              </span>
+              <Link href="/projects" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
+                Projects
+              </Link>
+              <Link href="/#contact" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
+                Contact
+              </Link>
+            </nav>
 
-          <Link
-            href="/#contact"
-            scroll={false}
-            className="text-sm font-bold tracking-wide uppercase transition-colors duration-200 ease-out hover:text-[#d8472b]"
-          >
-            Get in touch
-          </Link>
-        </header>
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95 md:hidden"
+            >
+              <span className="flex flex-col gap-1">
+                <span className="block h-0.5 w-6 bg-neutral-950" />
+                <span className="block h-0.5 w-6 bg-neutral-950" />
+              </span>
+            </button>
+          </header>
+
+          <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
+        </div>
 
         <section className="px-6 pt-10 pb-16 sm:px-10">
           <h1 className="font-sans text-[clamp(3rem,9vw,140px)] leading-[0.9] font-semibold tracking-[-0.05em] text-[#0b0b0c]">
