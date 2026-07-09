@@ -1,36 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/lib/language-context";
 
 type FaqItem = { question: string; answer: string };
-
-const faqs: FaqItem[] = [
-  {
-    question: "What's your process for taking on a new project?",
-    answer:
-      "We start by understanding your brand, goals, and audience, then map out a creative direction across video, social, and web. Once you approve the concept, we move into production and development, testing everything before launch.",
-  },
-  {
-    question: "What if I need changes or new content after launch?",
-    answer:
-      "No problem — most of our plans include ongoing revisions and fresh content each month. If you need something outside your plan, we scope it quickly and get to work.",
-  },
-  {
-    question: "Do you handle social media management and paid ads?",
-    answer:
-      "Yes. We plan, create, and post content, and we manage Meta and Google ad campaigns end to end, from creative to targeting to reporting.",
-  },
-  {
-    question: "How long does it typically take to see results?",
-    answer:
-      "Most clients see initial engagement and traffic gains within the first month, with stronger results building over 60-90 days as content and campaigns compound.",
-  },
-  {
-    question: "How do you make sure everything stays on-brand and mobile-friendly?",
-    answer:
-      "Every deliverable follows the brand guidelines we set together at kickoff, and every site and asset is tested across devices before it ever reaches your audience.",
-  },
-];
 
 function PlusMinusIcon({ open }: { open: boolean }) {
   return (
@@ -88,6 +61,7 @@ function FaqRow({
 }
 
 export function Faq() {
+  const t = useT();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [hasEntered, setHasEntered] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -116,15 +90,14 @@ export function Faq() {
   }, []);
 
   return (
-    <section className="relative z-10 bg-white px-6 py-24 sm:px-10">
+    <section id="faq" className="relative z-10 bg-white px-6 py-24 sm:px-10">
       <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[320px_1fr] lg:gap-24">
         <div>
           <h2 className="font-sans text-[clamp(2.5rem,7vw,112px)] leading-[0.96] font-semibold tracking-[-0.07em] text-[#0b0b0c]">
-            FAQ
+            {t.faq.heading}
           </h2>
           <p className="mt-6 max-w-xs text-lg leading-[1.4] font-medium tracking-[-0.04em] text-[rgba(12,12,12,0.6)]">
-            We&apos;ve heard it all. Here&apos;s everything you need to know
-            before working with us.
+            {t.faq.subheading}
           </p>
           <a
             href="#"
@@ -136,12 +109,12 @@ export function Faq() {
             >
               ↳
             </span>{" "}
-            Ask a question
+            {t.faq.cta}
           </a>
         </div>
 
         <div ref={listRef}>
-          {faqs.map((item, i) => (
+          {t.faq.items.map((item, i) => (
             <div
               key={item.question}
               style={{ transitionDelay: hasEntered ? `${i * 100}ms` : "0ms" }}

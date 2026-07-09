@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/lib/language-context";
 
 // Placeholder photo — swap each entry's image with your own asset per service
 const PLACEHOLDER_IMAGE_1 = "/images/b9b8e20333da0c5ec8cb95715c7fcc79.jpg";
@@ -9,34 +10,19 @@ const PLACEHOLDER_IMAGE_2 = "/images/ffbddd37b2ceffe750fc534bfa11429d.jpg";
 const PLACEHOLDER_IMAGE_3 = "/images/f480716d003bf3ac83cc3571beb1bcf4.jpg";
 const PLACEHOLDER_IMAGE_4 = "/images/5c351ae15cc42d7d58525f48faa0e9a9.jpg";
 
-const services = [
-  {
-    label: "Social & Ads",
-    description:
-      "We plan, create, and run social content and ad campaigns that turn scrolls into results.",
-    image: PLACEHOLDER_IMAGE_4,
-  },
-  {
-    label: "Websites",
-    description:
-      "We design and build fast, modern websites that convert visitors into customers.",
-    image: PLACEHOLDER_IMAGE_2,
-  },
-  {
-    label: "Video & Photo",
-    description:
-      "We produce cinematic video and photo content that captures attention and tells your brand's story.",
-    image: PLACEHOLDER_IMAGE_1,
-  },
-  {
-    label: "Design & Copy",
-    description:
-      "We craft visual design and copy that make your brand impossible to ignore.",
-    image: PLACEHOLDER_IMAGE_3,
-  },
+const serviceImages = [
+  PLACEHOLDER_IMAGE_4,
+  PLACEHOLDER_IMAGE_2,
+  PLACEHOLDER_IMAGE_1,
+  PLACEHOLDER_IMAGE_3,
 ];
 
 export function ServicesList() {
+  const t = useT();
+  const services = t.servicesList.items.map((item, i) => ({
+    ...item,
+    image: serviceImages[i],
+  }));
   const [active, setActive] = useState(0);
   const [hasEntered, setHasEntered] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -65,7 +51,7 @@ export function ServicesList() {
   }, []);
 
   return (
-    <section className="relative z-10 overflow-x-hidden bg-neutral-950 px-6 py-24 text-white sm:px-10">
+    <section id="services" className="relative z-10 overflow-x-hidden bg-neutral-950 px-6 py-24 text-white sm:px-10">
       <div className="flex items-center justify-between">
         <span className="text-lg font-bold tracking-tight">
           S&N<sup className="text-xs">®</sup>
@@ -74,7 +60,7 @@ export function ServicesList() {
           <span aria-hidden="true" className="text-[#d8472b]">
             ⌐
           </span>
-          Services
+          {t.servicesList.kicker}
         </span>
       </div>
 
@@ -144,7 +130,7 @@ export function ServicesList() {
             >
               ↳
             </span>{" "}
-            See pricing
+            {t.servicesList.seePricing}
           </a>
         </div>
       </div>

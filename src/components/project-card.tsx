@@ -25,7 +25,9 @@ export function ProjectCard({
 }) {
   return (
     <a
-      href="/projects"
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
       style={reveal(hasEntered, delay).style}
       className={`group block ${reveal(hasEntered, delay).className}`}
     >

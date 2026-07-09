@@ -2,25 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MenuOverlay } from "@/components/menu-overlay";
-import { projects } from "@/data/projects";
+import { LanguageToggle } from "@/components/language-toggle";
+import { PROJECT_COUNT } from "@/data/projects";
+import { useT } from "@/lib/language-context";
 
 const PARALLAX_PX = 60;
 
-const navLinks = [
-  { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Contact", href: "#contact" },
-];
-
-const services = [
-  "Content & Video Production",
-  "Web Development",
-  "Social Media Marketing",
-  "Ongoing Support",
-];
-
 export function Hero() {
+  const t = useT();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: t.nav.about, href: "/about" },
+    { label: t.nav.projects, href: "/projects" },
+    { label: t.nav.contact, href: "#contact" },
+  ];
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -99,8 +95,9 @@ export function Hero() {
               href="/projects"
               className="hidden font-mono text-xl text-cyan-300 transition-colors hover:text-cyan-200 sm:inline"
             >
-              ({projects.length})
+              ({PROJECT_COUNT})
             </a>
+            <LanguageToggle className="text-white" />
             <button
               onClick={() => setMenuOpen(true)}
               className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95"
@@ -109,7 +106,7 @@ export function Hero() {
                 <span className="block h-0.5 w-6 bg-white" />
                 <span className="block h-0.5 w-6 bg-white" />
               </span>
-              Menu
+              {t.menu.menu}
             </button>
           </div>
         </header>
@@ -130,29 +127,27 @@ export function Hero() {
             <div className="grid gap-12 lg:grid-cols-[1fr_auto]">
               <h1 className="font-sans text-[clamp(3rem,11vw,10rem)] leading-[1.4] font-bold tracking-[-0.06em]">
                 <span className="bg-gradient-to-r from-amber-300 via-amber-100 to-cyan-200 bg-[length:106%_100%] bg-clip-text block text-transparent">
-                  Digital
+                  {t.hero.headlineTop}
                 </span>
                 <span className="-mt-[0.5em] block">
                   <span className="bg-gradient-to-r from-white via-cyan-100 to-orange-400 bg-[length:106%_100%] bg-clip-text text-transparent">
-                    Agency
+                    {t.hero.headlineBottomLeft}
                   </span>{" "}
                   <span className="bg-gradient-to-r from-orange-300 via-amber-200 to-yellow-100 bg-[length:106%_100%] bg-clip-text text-transparent">
-                    Studio
+                    {t.hero.headlineBottomRight}
                   </span>
                 </span>
               </h1>
 
               <ul className="flex shrink-0 flex-col gap-1 self-start pt-6 text-sm font-semibold sm:text-base lg:pt-10">
-                {services.map((service) => (
+                {t.hero.servicesList.map((service) => (
                   <li key={service}>{service}</li>
                 ))}
               </ul>
             </div>
 
             <p className="mt-10 max-w-sm text-base leading-relaxed text-white/80">
-              We handle video, social, and web - all under one roof. Your
-              brand doesn&apos;t need five different vendors. It needs one
-              team that gets it done.
+              {t.hero.subtext}
             </p>
           </div>
         </div>

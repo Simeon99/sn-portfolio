@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useT } from "@/lib/language-context";
 
 const START_SCALE = 1.9;
 const END_SCALE = 1.2;
@@ -9,6 +10,7 @@ const END_SCALE = 1.2;
 const ANIMATION_VH = 1.1;
 
 export function ZoomText() {
+  const t = useT();
   const sectionRef = useRef<HTMLElement>(null);
   const scaleRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLSpanElement>(null);
@@ -65,7 +67,7 @@ export function ZoomText() {
         ref={scaleRef}
         className="relative flex flex-col items-center bg-white text-center will-change-transform"
       >
-        <h2 className="relative text-[clamp(2.5rem,9vw,7rem)] leading-[0.95] font-sans font-bold tracking-[-0.02em]">
+        <h2 className="relative px-4 py-6 text-[clamp(2.5rem,9vw,7rem)] leading-[1.22] font-sans font-bold tracking-[-0.02em]">
           {/* Placeholder product shot — swap for a real photo via next/image later.
               Painted first so the text (blended below) sits on top of it.
               Counter-scaled via ref so it stays a fixed size while scrolling. */}
@@ -79,10 +81,10 @@ export function ZoomText() {
           {/* White text with a difference blend: over the white page it reads
               black, over the black box above it inverts to white. */}
           <span className="relative mix-blend-difference block text-white">
-            From ordinary
+            {t.zoomText.lineOne}
           </span>
           <span className="relative mix-blend-difference block text-white">
-            to extraordinary
+            {t.zoomText.lineTwo}
           </span>
         </h2>
       </div>

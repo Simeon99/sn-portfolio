@@ -1,35 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const steps = [
-  {
-    number: "01",
-    title: "Discovery & Strategy",
-    description:
-      "We learn your brand, audience, and goals, then map out the content and design direction that will move the needle.",
-  },
-  {
-    number: "02",
-    title: "Creative Concept",
-    description:
-      "We shape the look, story, and messaging — mood boards, scripts, and wireframes you review before anything is built.",
-  },
-  {
-    number: "03",
-    title: "Production & Development",
-    description:
-      "Our team shoots, edits, designs, and builds — turning the approved concept into finished video, social, and web assets.",
-  },
-  {
-    number: "04",
-    title: "Launch & Support",
-    description:
-      "We launch, track performance, and keep optimizing — with ongoing support long after the first release.",
-  },
-];
+import { useT } from "@/lib/language-context";
 
 export function Process() {
+  const t = useT();
   const [hasEntered, setHasEntered] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -57,16 +32,14 @@ export function Process() {
   }, []);
 
   return (
-    <section className="relative z-10 bg-white px-6 py-24 sm:px-10">
+    <section id="process" className="relative z-10 bg-white px-6 py-24 sm:px-10">
       <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-2 lg:gap-24">
         <div>
           <h2 className="font-sans text-[clamp(2.5rem,7vw,112px)] leading-[0.96] font-semibold tracking-[-0.07em] text-[#0b0b0c]">
-            Our process
+            {t.process.heading}
           </h2>
           <p className="mt-6 max-w-md text-lg leading-[1.4] font-medium tracking-[-0.04em] text-[rgba(12,12,12,0.6)]">
-            Our four-step process keeps you informed and involved at every
-            stage, ensuring the final result meets your goals and resonates
-            with your audience.
+            {t.process.subheading}
           </p>
           <a
             href="#pricing"
@@ -78,12 +51,12 @@ export function Process() {
             >
               ↳
             </span>{" "}
-            Schedule a consultation
+            {t.process.cta}
           </a>
         </div>
 
         <div ref={listRef}>
-          {steps.map((step, i) => (
+          {t.process.steps.map((step, i) => (
             <div
               key={step.number}
               style={{ transitionDelay: hasEntered ? `${i * 120}ms` : "0ms" }}

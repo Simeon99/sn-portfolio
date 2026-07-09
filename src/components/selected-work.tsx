@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { projects, type Project } from "@/data/projects";
+import { getProjects, type Project } from "@/data/projects";
 import { ProjectCard, reveal } from "@/components/project-card";
+import { useT, useLanguage } from "@/lib/language-context";
 
 function ProjectRow({
   lg,
@@ -24,6 +25,9 @@ function ProjectRow({
 }
 
 export function SelectedWork() {
+  const t = useT();
+  const { lang } = useLanguage();
+  const projects = getProjects(lang);
   const gridRef = useRef<HTMLDivElement>(null);
   const [hasEntered, setHasEntered] = useState(false);
 
@@ -65,15 +69,15 @@ export function SelectedWork() {
           <span aria-hidden="true" className="text-[#d8472b]">
             ⌐
           </span>
-          Selected work
+          {t.selectedWork.kicker}
         </span>
         <h2 className="font-sans text-[clamp(2.5rem,7vw,112px)] leading-[0.96] font-semibold tracking-[-0.07em] text-[#0b0b0c]">
-          Proven results,
+          {t.selectedWork.headingLine1}
           <br />
-          stunning designs
+          {t.selectedWork.headingLine2}
         </h2>
         <span className="text-lg font-bold tracking-tight text-neutral-300">
-          2K25
+          {t.selectedWork.yearTag}
         </span>
       </div>
 
@@ -119,7 +123,7 @@ export function SelectedWork() {
               >
                 →
               </span>
-              All cases
+              {t.selectedWork.allCases}
               <sup className="text-xs font-bold text-[#d8472b]">({projects.length})</sup>
             </a>
           </div>

@@ -5,20 +5,19 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Footer } from "@/components/footer";
 import { MenuOverlay } from "@/components/menu-overlay";
+import { LanguageToggle } from "@/components/language-toggle";
 import { reveal } from "@/components/project-card";
+import { useT } from "@/lib/language-context";
+import { BOOKING_URL } from "@/lib/site-config";
 
-const team = [
+const teamMeta = [
   {
-    name: "Simeon",
-    role: "Co-founder, Software Engineer",
     initials: "SI",
     image: "/images/simeon.jpeg",
     gradient:
       "radial-gradient(at 20% 20%, #4b3fae 0%, transparent 55%), radial-gradient(at 80% 80%, #3a6fb0 0%, transparent 55%), #100a24",
   },
   {
-    name: "Nevena",
-    role: "Co-founder, Marketing Manager",
     initials: "NE",
     image: "/images/slika portfolio n.png",
     gradient:
@@ -27,6 +26,11 @@ const team = [
 ];
 
 export default function AboutPage() {
+  const t = useT();
+  const team = t.aboutPage.team.map((member, i) => ({
+    ...member,
+    ...teamMeta[i],
+  }));
   const [hasEntered, setHasEntered] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const introRef = useRef<HTMLDivElement>(null);
@@ -65,28 +69,31 @@ export default function AboutPage() {
 
             <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
               <Link href="/" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                Home
+                {t.nav.home}
               </Link>
               <span aria-current="page" className="text-neutral-950">
-                About
+                {t.nav.about}
               </span>
               <Link href="/projects" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                Projects
+                {t.nav.projects}
               </Link>
               <Link href="/#contact" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                Contact
+                {t.nav.contact}
               </Link>
             </nav>
 
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95 md:hidden"
-            >
-              <span className="flex flex-col gap-1">
-                <span className="block h-0.5 w-6 bg-neutral-950" />
-                <span className="block h-0.5 w-6 bg-neutral-950" />
-              </span>
-            </button>
+            <div className="flex items-center gap-4">
+              <LanguageToggle />
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95 md:hidden"
+              >
+                <span className="flex flex-col gap-1">
+                  <span className="block h-0.5 w-6 bg-neutral-950" />
+                  <span className="block h-0.5 w-6 bg-neutral-950" />
+                </span>
+              </button>
+            </div>
           </header>
 
           <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
@@ -94,7 +101,7 @@ export default function AboutPage() {
 
         <section className="px-6 pt-10 pb-16 sm:px-10">
           <h1 className="font-sans text-[clamp(3rem,9vw,140px)] leading-[0.9] font-semibold tracking-[-0.05em] text-[#0b0b0c]">
-            About us
+            {t.aboutPage.heading}
           </h1>
         </section>
 
@@ -105,7 +112,7 @@ export default function AboutPage() {
               className={reveal(hasEntered, 0).className}
             >
               <span className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">
-                Meet the team
+                {t.aboutPage.meetTheTeam}
               </span>
             </div>
 
@@ -114,8 +121,7 @@ export default function AboutPage() {
               className={`flex flex-col gap-6 ${reveal(hasEntered, 80).className}`}
             >
               <p className="text-sm text-neutral-500">
-                Two graduates, two very different degrees, one shared
-                instinct: most agencies overcomplicate a simple problem.
+                {t.aboutPage.introSmall}
               </p>
               <div className="flex items-center gap-3">
                 <span
@@ -131,8 +137,8 @@ export default function AboutPage() {
                   />
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-neutral-950">Simeon</p>
-                  <p className="text-xs text-neutral-500">Software Engineer</p>
+                  <p className="text-sm font-bold text-neutral-950">{team[0].name}</p>
+                  <p className="text-xs text-neutral-500">{t.aboutPage.founderRole}</p>
                 </div>
               </div>
             </div>
@@ -142,15 +148,10 @@ export default function AboutPage() {
               className={reveal(hasEntered, 160).className}
             >
               <p className="text-xl leading-relaxed text-neutral-950 sm:text-2xl">
-                We don&apos;t believe in overcomplicating things, using the
-                tools and strategies that make the most sense for your goals.
-                If custom code is needed, we write it. If something works out
-                of the box, we won&apos;t reinvent it.
+                {t.aboutPage.introLarge}
               </p>
               <p className="mt-6 text-neutral-500">
-                We approach each project with the same questions: what does
-                this need to do, who will use it, and how can we make it as
-                simple and effective as possible?
+                {t.aboutPage.introLargeSecondary}
               </p>
             </div>
           </section>
@@ -170,17 +171,17 @@ export default function AboutPage() {
 
                 <div className="mt-16">
                   <h3 className="text-2xl font-bold tracking-tight text-neutral-950">
-                    Join us
+                    {t.aboutPage.joinUs}
                   </h3>
                   <p className="mt-3 text-sm text-neutral-500">
-                    If you&apos;re ready to grow your brand with us, your
-                    journey could start here.
+                    {t.aboutPage.joinUsDescription}
                   </p>
                 </div>
 
-                <Link
-                  href="/#contact"
-                  scroll={false}
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group mt-10 inline-flex items-center gap-2 text-sm font-semibold text-neutral-950 transition-colors duration-200 ease-out hover:text-[#d8472b]"
                 >
                   <span
@@ -189,8 +190,8 @@ export default function AboutPage() {
                   >
                     →
                   </span>
-                  Let&apos;s talk
-                </Link>
+                  {t.aboutPage.letsTalk}
+                </a>
               </div>
 
               {team.map((member, i) => (
@@ -234,7 +235,7 @@ export default function AboutPage() {
               style={reveal(hasEntered, 0).style}
               className={`text-sm font-semibold tracking-wide text-neutral-500 uppercase ${reveal(hasEntered, 0).className}`}
             >
-              Approach
+              {t.aboutPage.approach}
             </span>
 
             <div
@@ -242,21 +243,10 @@ export default function AboutPage() {
               className={`flex flex-col gap-6 ${reveal(hasEntered, 80).className}`}
             >
               <p className="text-xl leading-relaxed text-neutral-950 sm:text-2xl">
-                S&amp;N started with two young, talented people who&apos;d
-                already proven their skills in practice — one with a degree
-                in Software Engineering, the other with a Master&apos;s in
-                Marketing Management. Instead of going separate ways, into
-                separate companies, they built one studio where both
-                disciplines sit at the same table.
+                {t.aboutPage.approachLarge}
               </p>
               <p className="text-neutral-500">
-                That&apos;s still how we work today. Every site we ship is
-                held to a developer&apos;s standard for what &quot;done&quot;
-                means, and every campaign is held to a marketer&apos;s
-                standard for what &quot;working&quot; means. Nothing gets lost
-                in translation between departments, because there aren&apos;t
-                any — just two people who studied this for years, and now do
-                it for you.
+                {t.aboutPage.approachSecondary}
               </p>
             </div>
           </section>

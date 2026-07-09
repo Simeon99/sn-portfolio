@@ -1,29 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const stats = [
-  {
-    value: "10+",
-    label: "Clients served",
-    description: "Campaigns and sites shipped for our clients.",
-  },
-  {
-    value: "1.5M+",
-    label: "Views generated",
-    description: "Video and social content reaching real audiences.",
-  },
-  {
-    value: "98%",
-    label: "Client satisfaction rate",
-    description: "We build long-term partnerships through proven results.",
-  },
-  {
-    value: "3+",
-    label: "Years of expertise",
-    description: "Combined experience across video, social, and web.",
-  },
-];
+import { useT } from "@/lib/language-context";
 
 function parseValue(raw: string) {
   const match = raw.match(/^([^\d.]*)([\d.]+)(.*)$/);
@@ -75,7 +53,7 @@ function StatItem({
   start,
   delay,
 }: {
-  stat: (typeof stats)[number];
+  stat: { value: string; label: string; description: string };
   start: boolean;
   delay: number;
 }) {
@@ -106,6 +84,7 @@ function StatItem({
 }
 
 export function Stats() {
+  const t = useT();
   const sectionRef = useRef<HTMLElement>(null);
   const [start, setStart] = useState(false);
 
@@ -142,16 +121,15 @@ export function Stats() {
         <div className="grid gap-6 sm:grid-cols-[auto_1fr] sm:gap-16">
           <div className="flex items-center gap-2 text-lg font-semibold text-[#d8472b]">
             <span aria-hidden="true">↳</span>
-            <span className="text-neutral-950">Let&apos;s talk</span>
+            <span className="text-neutral-950">{t.stats.kicker}</span>
           </div>
           <h2 className="max-w-3xl font-sans text-[clamp(2rem,4.5vw,4rem)] leading-[1.05] font-bold tracking-[-0.02em]">
-            Our work speaks through numbers. Here&apos;s what we&apos;ve
-            achieved so far.
+            {t.stats.heading}
           </h2>
         </div>
 
         <div className="mt-24 grid grid-cols-1 gap-x-10 gap-y-16 sm:mt-32 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat, i) => (
+          {t.stats.items.map((stat, i) => (
             <StatItem key={stat.label} stat={stat} start={start} delay={i * 100} />
           ))}
         </div>

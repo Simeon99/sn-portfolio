@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/lib/language-context";
 
 export function BrandStatement() {
+  const t = useT();
   const [hasEntered, setHasEntered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -46,9 +48,9 @@ export function BrandStatement() {
             : "translate-y-8 opacity-0 motion-reduce:translate-y-0"
         }`}
       >
-        Work that&apos;s built to last
+        {t.brandStatement.lineOne}
         <br />
-        and grow with your business.
+        {t.brandStatement.lineTwo}
       </p>
 
       <span
@@ -78,7 +80,7 @@ export function BrandStatement() {
           onClick={() =>
             window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
           }
-          aria-label="Scroll down"
+          aria-label={t.brandStatement.scrollDown}
           className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-950 text-white transition-transform duration-200 ease-out hover:scale-110 active:scale-95"
         >
           <svg

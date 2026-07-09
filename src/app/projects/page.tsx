@@ -4,13 +4,22 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Footer } from "@/components/footer";
 import { MenuOverlay } from "@/components/menu-overlay";
+import { LanguageToggle } from "@/components/language-toggle";
 import { ProjectCard } from "@/components/project-card";
-import { projects, projectCategories } from "@/data/projects";
-
-const filters = ["All", ...projectCategories];
+import { getProjects, getProjectCategories } from "@/data/projects";
+import { useT, useLanguage } from "@/lib/language-context";
 
 export default function ProjectsPage() {
-  const [filter, setFilter] = useState("All");
+  const { lang } = useLanguage();
+  return <ProjectsPageContent key={lang} />;
+}
+
+function ProjectsPageContent() {
+  const t = useT();
+  const { lang } = useLanguage();
+  const projects = getProjects(lang);
+  const filters = [t.projectsPage.allFilter, ...getProjectCategories(lang)];
+  const [filter, setFilter] = useState(t.projectsPage.allFilter);
   const gridRef = useRef<HTMLDivElement>(null);
   const [hasEntered, setHasEntered] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,7 +48,9 @@ export default function ProjectsPage() {
   }, []);
 
   const filtered =
-    filter === "All" ? projects : projects.filter((p) => p.tags.includes(filter));
+    filter === t.projectsPage.allFilter
+      ? projects
+      : projects.filter((p) => p.tags.includes(filter));
 
   return (
     <>
@@ -52,31 +63,34 @@ export default function ProjectsPage() {
 
             <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
               <Link href="/" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                Home
+                {t.nav.home}
               </Link>
               <Link href="/about" className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                About
+                {t.nav.about}
               </Link>
               <span aria-current="page" className="text-neutral-950">
-                Projects
+                {t.nav.projects}
               </span>
               <Link href="/#pricing" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                Pricing
+                {t.nav.pricing}
               </Link>
               <Link href="/#contact" scroll={false} className="transition-colors duration-200 ease-out hover:text-[#d8472b]">
-                Contact
+                {t.nav.contact}
               </Link>
             </nav>
 
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95 md:hidden"
-            >
-              <span className="flex flex-col gap-1">
-                <span className="block h-0.5 w-6 bg-neutral-950" />
-                <span className="block h-0.5 w-6 bg-neutral-950" />
-              </span>
-            </button>
+            <div className="flex items-center gap-4">
+              <LanguageToggle />
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="flex items-center gap-2 text-sm font-bold tracking-wide uppercase transition-transform duration-200 ease-out hover:scale-105 active:scale-95 md:hidden"
+              >
+                <span className="flex flex-col gap-1">
+                  <span className="block h-0.5 w-6 bg-neutral-950" />
+                  <span className="block h-0.5 w-6 bg-neutral-950" />
+                </span>
+              </button>
+            </div>
           </header>
 
           <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
@@ -85,11 +99,10 @@ export default function ProjectsPage() {
         <section className="px-6 pt-10 pb-24 sm:px-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <h1 className="font-sans text-[clamp(2.5rem,7vw,80px)] leading-[0.96] font-semibold tracking-[-0.05em] text-[#0b0b0c]">
-              Projects
+              {t.projectsPage.heading}
             </h1>
             <p className="max-w-sm text-neutral-500 sm:pt-4">
-              Every project we deliver is a reflection of our commitment to
-              quality, designed to inspire and drive real results.
+              {t.projectsPage.description}
             </p>
           </div>
 

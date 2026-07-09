@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/lib/language-context";
 
 type Plan = {
   name: string;
@@ -12,55 +13,10 @@ type Plan = {
   highlighted?: boolean;
 };
 
-const plans: Plan[] = [
-  {
-    name: "Basic",
-    monthly: 799,
-    annual: 559,
-    description:
-      "For small businesses or startups building their first digital presence.",
-    features: [
-      "Brand & competitor audit",
-      "Website design (up to 4 pages)",
-      "4 social media posts / month",
-      "Basic analytics setup",
-      "Contact form & booking setup",
-      "Bug fixing and testing support",
-    ],
-  },
-  {
-    name: "Pro",
-    badge: { label: "Most popular", icon: "flame" },
-    monthly: 2599,
-    annual: 1999,
-    description:
-      "For growing brands that need consistent content and a stronger web presence.",
-    features: [
-      "Everything in the Basic plan",
-      "Up to 10 pages, fully customized",
-      "2 short videos + 8 social posts / month",
-      "Paid ad management (Meta & Google)",
-      "Enhanced SEO for core pages",
-      "Monthly performance reporting",
-    ],
-    highlighted: true,
-  },
-  {
-    name: "Max",
-    badge: { label: "Premium", icon: "diamond" },
-    monthly: 3999,
-    annual: 2799,
-    description:
-      "For established brands looking for a fully tailored creative team.",
-    features: [
-      "Everything in the Pro plan",
-      "Unlimited video & photo shoots",
-      "Full social & ad campaign management",
-      "Custom e-commerce functionality",
-      "Unlimited revisions during production",
-      "Priority support for 6 months post-launch",
-    ],
-  },
+const planMeta = [
+  { monthly: 799, annual: 559 },
+  { monthly: 2599, annual: 1999, icon: "flame" as const, highlighted: true },
+  { monthly: 3999, annual: 2799, icon: "diamond" as const },
 ];
 
 function FlameIcon() {
@@ -103,6 +59,7 @@ function PlanCard({
   hasEntered: boolean;
   delay: number;
 }) {
+  const t = useT();
   const price = annual ? plan.annual : plan.monthly;
 
   return (
@@ -141,7 +98,7 @@ function PlanCard({
         <span className="text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
           ${price.toLocaleString()}
         </span>
-        <span className="pb-1 text-sm text-neutral-500">/month</span>
+        <span className="pb-1 text-sm text-neutral-500">{t.pricing.perMonth}</span>
       </div>
 
       <p className="mt-4 text-sm text-neutral-500">{plan.description}</p>
@@ -153,12 +110,12 @@ function PlanCard({
             : "bg-white text-neutral-950 ring-1 ring-neutral-200 hover:bg-neutral-50 hover:ring-neutral-300"
           }`}
       >
-        <span aria-hidden="true">↳</span> Choose this plan
+        <span aria-hidden="true">↳</span> {t.pricing.choosePlan}
       </button>
 
       <div className="mt-10">
         <div className="text-sm font-semibold text-neutral-950">
-          What&apos;s Included:
+          {t.pricing.whatsIncluded}
         </div>
         <ul className="mt-4 space-y-3">
           {plan.features.map((feature) => (
@@ -182,9 +139,23 @@ function PlanCard({
 }
 
 export function Pricing() {
+  const t = useT();
   const [annual, setAnnual] = useState(true);
   const [hasEntered, setHasEntered] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const plans: Plan[] = t.pricing.plans.map((plan, i) => ({
+    name: plan.name,
+    badge:
+      plan.badgeLabel && planMeta[i].icon
+        ? { label: plan.badgeLabel, icon: planMeta[i].icon! }
+        : undefined,
+    monthly: planMeta[i].monthly,
+    annual: planMeta[i].annual,
+    description: plan.description,
+    features: plan.features,
+    highlighted: planMeta[i].highlighted,
+  }));
 
   useEffect(() => {
     const el = gridRef.current;
@@ -213,20 +184,19 @@ export function Pricing() {
     <section id="pricing" className="relative z-10 bg-white py-24">
       <div className="px-6 text-center sm:px-10">
         <h2 className="font-sans whitespace-nowrap text-5xl font-semibold tracking-[-0.07em] text-[#0b0b0c] leading-[0.96] sm:text-[clamp(2.5rem,7vw,112px)]">
-          Flexible pricing
+          {t.pricing.heading}
         </h2>
       </div>
       <div className="mx-auto max-w-2xl px-6 text-center sm:px-10">
         <p className="mt-6 text-lg leading-[1.4] font-medium tracking-[-0.04em] text-[rgba(12,12,12,0.6)]">
-          Choose the plan that fits where your brand is headed. <br /> From a solid
-          foundation to a fully optimized growth engine.
+          {t.pricing.subheading} <br /> {t.pricing.subheadingLine2}
         </p>
 
         <div className="mt-8 flex items-center justify-center gap-3">
           <span
             className={`text-sm font-medium ${!annual ? "text-neutral-950" : "text-neutral-400"}`}
           >
-            Monthly
+            {t.pricing.monthly}
           </span>
           <button
             type="button"
@@ -243,10 +213,10 @@ export function Pricing() {
           <span
             className={`text-sm font-medium ${annual ? "text-neutral-950" : "text-neutral-400"}`}
           >
-            Annual
+            {t.pricing.annual}
           </span>
           <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-semibold text-[#d8472b]">
-            Save 30%
+            {t.pricing.saveBadge}
           </span>
         </div>
       </div>

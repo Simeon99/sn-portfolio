@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { LanguageProvider } from "@/lib/language-context";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,8 +30,10 @@ export default function RootLayout({
       className={`${inter.variable} ${geistMono.variable} min-h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SmoothScroll />
-        {children}
+        <LanguageProvider>
+          <SmoothScroll />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

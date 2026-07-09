@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-const doneItems = ["Discovery call", "Concept & scripting", "Production"];
-
-const todoItems = ["Client review", "Final delivery"];
+import Image from "next/image";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useT } from "@/lib/language-context";
+import { BOOKING_URL } from "@/lib/site-config";
 
 function CheckIcon() {
   return (
@@ -49,9 +48,42 @@ function GrowthChart() {
   );
 }
 
-const weekLabels = ["S", "M", "T", "W", "T", "F", "S"];
-const weekDates = [12, 13, 14, 15, 16, 17, 18];
-const selectedDateIndex = 4;
+// The booking week is computed from the real clock: the first opening is
+// always the day after tomorrow, shown inside its surrounding Sunday-first
+// week. Computed lazily on the client (with a static server fallback) so the
+// prerendered HTML never depends on the build machine's date.
+type BookingWeek = { dates: number[]; selectedIndex: number };
+
+const serverBookingWeek: BookingWeek = {
+  dates: [12, 13, 14, 15, 16, 17, 18],
+  selectedIndex: 4,
+};
+
+let clientBookingWeek: BookingWeek | null = null;
+
+function getBookingWeek(): BookingWeek {
+  if (!clientBookingWeek) {
+    const target = new Date();
+    target.setDate(target.getDate() + 2);
+    const selectedIndex = target.getDay();
+    const dates: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(target);
+      day.setDate(target.getDate() - selectedIndex + i);
+      dates.push(day.getDate());
+    }
+    clientBookingWeek = { dates, selectedIndex };
+  }
+  return clientBookingWeek;
+}
+
+function getServerBookingWeek(): BookingWeek {
+  return serverBookingWeek;
+}
+
+function subscribeBookingWeek() {
+  return () => {};
+}
 
 function CalendarIcon() {
   return (
@@ -80,6 +112,12 @@ function reveal(hasEntered: boolean, delay: number) {
 }
 
 export function PriorityFeatures() {
+  const t = useT();
+  const bookingWeek = useSyncExternalStore(
+    subscribeBookingWeek,
+    getBookingWeek,
+    getServerBookingWeek,
+  );
   const [hasEntered, setHasEntered] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -110,11 +148,10 @@ export function PriorityFeatures() {
     <section className="relative z-10 bg-white px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="font-sans text-[clamp(2.5rem,7vw,112px)] leading-[0.96] font-semibold tracking-[-0.07em] text-[#0b0b0c]">
-          Why brands choose S&N
+          {t.priorityFeatures.heading}
         </h2>
         <p className="mt-6 text-lg text-neutral-500">
-          A full-service creative partner from the first idea to the final
-          upload — here&apos;s what working with us actually looks like.
+          {t.priorityFeatures.subheading}
         </p>
       </div>
 
@@ -135,18 +172,24 @@ export function PriorityFeatures() {
               backgroundSize: "16px 16px",
             }}
           >
-            {/* Placeholder photo — swap for next/image with your own src */}
+            <Image
+              src="/images/laptophand.png"
+              alt={t.priorityFeatures.card1.title}
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
           </div>
           <div className="p-6">
             <h3 className="text-lg font-bold text-neutral-950">
-              One team, no hand-offs
+              {t.priorityFeatures.card1.title}
             </h3>
             <p className="mt-2 text-sm text-neutral-500">
-              From first call to final delivery, you work with{" "}
+              {t.priorityFeatures.card1.descriptionBefore}{" "}
               <span className="font-semibold text-neutral-950">
-                the same small team
+                {t.priorityFeatures.card1.highlight}
               </span>{" "}
-              — no account managers relaying messages along the way.
+              {t.priorityFeatures.card1.descriptionAfter}
             </p>
           </div>
         </div>
@@ -165,25 +208,25 @@ export function PriorityFeatures() {
 
           <div>
             <h3 className="text-xl leading-tight font-bold text-neutral-950">
-              A process
+              {t.priorityFeatures.card2.titleLine1}
               <br />
-              you can follow
+              {t.priorityFeatures.card2.titleLine2}
             </h3>
             <p className="mt-3 text-sm text-neutral-500">
-              Every project moves through the{" "}
+              {t.priorityFeatures.card2.descriptionBefore}{" "}
               <span className="font-semibold text-neutral-950">
-                same clear stages
+                {t.priorityFeatures.card2.highlight}
               </span>{" "}
-              — so you always know what&apos;s next and when.
+              {t.priorityFeatures.card2.descriptionAfter}
             </p>
           </div>
 
           <div className="rounded-xl bg-white p-4 shadow-sm">
             <div className="font-semibold text-neutral-950">
-              Project timeline
+              {t.priorityFeatures.card2.timelineLabel}
             </div>
             <ul className="mt-3 space-y-2 text-sm">
-              {doneItems.map((item) => (
+              {t.priorityFeatures.card2.doneItems.map((item) => (
                 <li
                   key={item}
                   className="flex items-center gap-2 text-neutral-400 line-through"
@@ -192,7 +235,7 @@ export function PriorityFeatures() {
                   {item}
                 </li>
               ))}
-              {todoItems.map((item) => (
+              {t.priorityFeatures.card2.todoItems.map((item) => (
                 <li
                   key={item}
                   className="flex items-center gap-2 text-neutral-700"
@@ -204,7 +247,7 @@ export function PriorityFeatures() {
             </ul>
             <div className="mt-4 flex items-center gap-2 border-t border-neutral-100 pt-3 text-xs text-neutral-400">
               <CalendarIcon />
-              Typical turnaround: 2-3 weeks
+              {t.priorityFeatures.card2.turnaround}
             </div>
           </div>
         </div>
@@ -216,7 +259,7 @@ export function PriorityFeatures() {
         >
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-neutral-400">
-              Engagement, last 90 days
+              {t.priorityFeatures.card3.engagementLabel}
             </span>
             <span className="rounded-full bg-white/10 px-2 py-1 text-xs font-semibold text-orange-400">
               +248%
@@ -226,13 +269,13 @@ export function PriorityFeatures() {
           <GrowthChart />
 
           <div>
-            <h3 className="text-xl font-bold">Growth you can measure</h3>
+            <h3 className="text-xl font-bold">{t.priorityFeatures.card3.title}</h3>
             <p className="mt-2 text-sm text-neutral-400">
-              Every deliverable is built to perform, not just look good —{" "}
+              {t.priorityFeatures.card3.descriptionBefore}{" "}
               <span className="font-semibold text-white">
-                real metrics, reported monthly
+                {t.priorityFeatures.card3.highlight}
               </span>
-              .
+              {t.priorityFeatures.card3.descriptionAfter}
             </p>
           </div>
         </div>
@@ -244,16 +287,16 @@ export function PriorityFeatures() {
         >
           <div className="rounded-xl bg-white/10 p-4">
             <div className="grid grid-cols-7 gap-1 text-center text-xs text-white/60">
-              {weekLabels.map((label, i) => (
+              {t.priorityFeatures.card4.weekLabels.map((label, i) => (
                 <span key={i}>{label}</span>
               ))}
             </div>
             <div className="mt-2 grid grid-cols-7 gap-1 text-center text-sm">
-              {weekDates.map((date, i) => (
+              {bookingWeek.dates.map((date, i) => (
                 <span
-                  key={date}
+                  key={`${i}-${date}`}
                   className={
-                    i === selectedDateIndex
+                    i === bookingWeek.selectedIndex
                       ? "flex items-center justify-center rounded-full bg-white py-1 font-semibold text-[#d8472b]"
                       : "flex items-center justify-center py-1 text-white/80"
                   }
@@ -263,23 +306,26 @@ export function PriorityFeatures() {
               ))}
             </div>
             <div className="mt-3 border-t border-white/15 pt-3 text-xs text-white/70">
-              Next opening: Thursday, 10:00 AM
+              {t.priorityFeatures.card4.nextOpeningPrefix}{" "}
+              {t.priorityFeatures.card4.dayNames[bookingWeek.selectedIndex]},{" "}
+              {t.priorityFeatures.card4.nextOpeningTime}
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold">Ready when you are</h3>
+            <h3 className="text-xl font-bold">{t.priorityFeatures.card4.title}</h3>
             <p className="mt-2 text-sm text-white/80">
-              Book a free 20-minute call and let&apos;s talk about your next
-              project.
+              {t.priorityFeatures.card4.description}
             </p>
           </div>
 
-          <button
-            type="button"
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="group mt-auto flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#d8472b] transition-[background-color,transform] duration-200 ease-out hover:scale-[1.02] hover:bg-neutral-100 active:scale-95"
           >
-            Book a call
+            {t.priorityFeatures.card4.cta}
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -293,7 +339,7 @@ export function PriorityFeatures() {
                 strokeLinejoin="round"
               />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </section>
