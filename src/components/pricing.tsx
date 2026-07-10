@@ -2,22 +2,38 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/language-context";
+import { BOOKING_URL } from "@/lib/site-config";
+
+type PlanPricing =
+  | { kind: "retainer"; monthly: number; annual: number }
+  | { kind: "project"; price: number | null };
 
 type Plan = {
   name: string;
   badge?: { label: string; icon: "flame" | "diamond" };
-  monthly: number;
-  annual: number;
+  pricing: PlanPricing;
   description: string;
   features: string[];
   highlighted?: boolean;
 };
 
-const planMeta = [
-  { monthly: 799, annual: 559 },
-  { monthly: 2599, annual: 1999, icon: "flame" as const, highlighted: true },
-  { monthly: 3999, annual: 2799, icon: "diamond" as const },
+// Full monthly price vs. discounted price with an annual commitment.
+const socialMeta = [
+  { monthly: 610, annual: 550 },
+  { monthly: 720, annual: 650, icon: "flame" as const, highlighted: true },
+  { monthly: 950, annual: 850, icon: "diamond" as const },
 ];
+
+// One-off project prices; `null` means custom scope ("Let's Talk").
+const webMeta = [
+  { price: 990 as number | null },
+  { price: 1990 as number | null, icon: "flame" as const, highlighted: true },
+  { price: null as number | null, icon: "diamond" as const },
+];
+
+function formatPrice(value: number) {
+  return `€${value.toLocaleString("en-US")}`;
+}
 
 function FlameIcon() {
   return (
@@ -48,6 +64,47 @@ function PlanBadge({ badge }: { badge: NonNullable<Plan["badge"]> }) {
   );
 }
 
+function PlanPrice({ pricing, annual }: { pricing: PlanPricing; annual: boolean }) {
+  const t = useT();
+
+  if (pricing.kind === "retainer") {
+    const price = annual ? pricing.annual : pricing.monthly;
+    return (
+      <div className="mt-6 flex items-end gap-2">
+        {annual && (
+          <span className="pb-1 text-lg font-medium text-neutral-400 line-through">
+            {formatPrice(pricing.monthly)}
+          </span>
+        )}
+        <span className="text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
+          {formatPrice(price)}
+        </span>
+        <span className="pb-1 text-sm text-neutral-500">{t.pricing.perMonth}</span>
+      </div>
+    );
+  }
+
+  if (pricing.price === null) {
+    return (
+      <div className="mt-6 flex items-end gap-2">
+        <span className="text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
+          {t.pricing.customPrice}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 flex flex-wrap items-end gap-x-2 gap-y-1">
+      <span className="pb-1 text-sm text-neutral-500">{t.pricing.startingAt}</span>
+      <span className="text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
+        {formatPrice(pricing.price)}
+      </span>
+      <span className="pb-1 text-sm text-neutral-500">{t.pricing.oneTime}</span>
+    </div>
+  );
+}
+
 function PlanCard({
   plan,
   annual,
@@ -60,7 +117,6 @@ function PlanCard({
   delay: number;
 }) {
   const t = useT();
-  const price = annual ? plan.annual : plan.monthly;
 
   return (
     <div
@@ -89,29 +145,21 @@ function PlanCard({
         {plan.badge && <PlanBadge badge={plan.badge} />}
       </div>
 
-      <div className="mt-6 flex items-end gap-2">
-        {annual && (
-          <span className="pb-1 text-lg font-medium text-neutral-400 line-through">
-            ${plan.monthly.toLocaleString()}
-          </span>
-        )}
-        <span className="text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
-          ${price.toLocaleString()}
-        </span>
-        <span className="pb-1 text-sm text-neutral-500">{t.pricing.perMonth}</span>
-      </div>
+      <PlanPrice pricing={plan.pricing} annual={annual} />
 
       <p className="mt-4 text-sm text-neutral-500">{plan.description}</p>
 
-      <button
-        type="button"
+      <a
+        href={BOOKING_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         className={`mt-8 flex items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out hover:scale-[1.02] active:scale-95 ${plan.highlighted
             ? "bg-[#d8472b] hover:bg-[#c23f26] text-white"
             : "bg-white text-neutral-950 ring-1 ring-neutral-200 hover:bg-neutral-50 hover:ring-neutral-300"
           }`}
       >
         <span aria-hidden="true">↳</span> {t.pricing.choosePlan}
-      </button>
+      </a>
 
       <div className="mt-10">
         <div className="text-sm font-semibold text-neutral-950">
@@ -140,22 +188,39 @@ function PlanCard({
 
 export function Pricing() {
   const t = useT();
+  const [tab, setTab] = useState<"social" | "web">("social");
   const [annual, setAnnual] = useState(true);
   const [hasEntered, setHasEntered] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const plans: Plan[] = t.pricing.plans.map((plan, i) => ({
-    name: plan.name,
-    badge:
-      plan.badgeLabel && planMeta[i].icon
-        ? { label: plan.badgeLabel, icon: planMeta[i].icon! }
-        : undefined,
-    monthly: planMeta[i].monthly,
-    annual: planMeta[i].annual,
-    description: plan.description,
-    features: plan.features,
-    highlighted: planMeta[i].highlighted,
-  }));
+  const plans: Plan[] =
+    tab === "social"
+      ? t.pricing.socialPlans.map((plan, i) => ({
+          name: plan.name,
+          badge:
+            plan.badgeLabel && socialMeta[i].icon
+              ? { label: plan.badgeLabel, icon: socialMeta[i].icon! }
+              : undefined,
+          pricing: {
+            kind: "retainer",
+            monthly: socialMeta[i].monthly,
+            annual: socialMeta[i].annual,
+          },
+          description: plan.description,
+          features: plan.features,
+          highlighted: socialMeta[i].highlighted,
+        }))
+      : t.pricing.webPlans.map((plan, i) => ({
+          name: plan.name,
+          badge:
+            plan.badgeLabel && webMeta[i].icon
+              ? { label: plan.badgeLabel, icon: webMeta[i].icon! }
+              : undefined,
+          pricing: { kind: "project", price: webMeta[i].price },
+          description: plan.description,
+          features: plan.features,
+          highlighted: webMeta[i].highlighted,
+        }));
 
   useEffect(() => {
     const el = gridRef.current;
@@ -192,7 +257,27 @@ export function Pricing() {
           {t.pricing.subheading} <br /> {t.pricing.subheadingLine2}
         </p>
 
-        <div className="mt-8 flex items-center justify-center gap-3">
+        <div className="mt-8 inline-flex rounded-full bg-neutral-100 p-1">
+          {(["social", "web"] as const).map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setTab(key)}
+              className={`rounded-full px-5 py-2 text-sm font-semibold transition-[background-color,color] duration-200 ease-out ${
+                tab === key
+                  ? "bg-neutral-950 text-white"
+                  : "text-neutral-500 hover:text-neutral-950"
+              }`}
+            >
+              {key === "social" ? t.pricing.socialTab : t.pricing.webTab}
+            </button>
+          ))}
+        </div>
+
+        {/* Kept in the layout (invisible) on the web tab so the cards don't jump. */}
+        <div
+          className={`mt-6 flex items-center justify-center gap-3 ${tab === "social" ? "" : "invisible"}`}
+        >
           <span
             className={`text-sm font-medium ${!annual ? "text-neutral-950" : "text-neutral-400"}`}
           >

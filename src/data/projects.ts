@@ -5,6 +5,8 @@ const PLACEHOLDER_IMAGE_2 = "/images/studio-display-xdr-mockup-floating.jpg";
 const PLACEHOLDER_IMAGE_3 = "/images/7_8_2026_15_6_7_contentcore.xyz.png";
 const PLACEHOLDER_IMAGE_4 = "/images/7_8_2026_14_59_39_contentcore.xyz.png";
 const PLACEHOLDER_IMAGE_5 = "/images/go2 img.jpg";
+const PLACEHOLDER_IMAGE_6 = "/images/prostore.png";
+const PLACEHOLDER_IMAGE_7 = "/images/content.png";
 
 export type Project = {
   title: string;
@@ -62,6 +64,24 @@ const projectsByLang: Record<Lang, Project[]> = {
       size: "lg",
       link: "https://www.instagram.com/nasevino/?hl=en",
     },
+    {
+      title: "Prostore",
+      description:
+        "A self storage website built for effortless online reservations — a safe, comfortable place for your belongings, accessible anytime.",
+      tags: ["Web Design", "Development"],
+      image: PLACEHOLDER_IMAGE_6,
+      size: "sm",
+      link: "https://prostor.rs/sr",
+    },
+    {
+      title: "Blackbird",
+      description:
+        "A website for an AI integration studio that deploys AI fitting how companies already work — no rip-and-replace, real results, fast.",
+      tags: ["Web Design", "Development"],
+      image: PLACEHOLDER_IMAGE_7,
+      size: "sm",
+      link: "https://blackbird.rs/",
+    },
   ],
   sr: [
     {
@@ -108,6 +128,24 @@ const projectsByLang: Record<Lang, Project[]> = {
       image: PLACEHOLDER_IMAGE_3,
       size: "lg",
       link: "https://www.instagram.com/nasevino/?hl=en",
+    },
+    {
+      title: "Prostore",
+      description:
+        "Sajt za samostalno skladištenje napravljen za jednostavnu online rezervaciju — bezbedno i udobno mesto za vaše stvari, dostupno u svakom trenutku.",
+      tags: ["Dizajn sajta", "Razvoj"],
+      image: PLACEHOLDER_IMAGE_6,
+      size: "sm",
+      link: "https://prostor.rs/sr",
+    },
+    {
+      title: "Blackbird",
+      description:
+        "Sajt za studio koji integriše AI prilagođen postojećem načinu rada kompanija — bez menjanja svega iz temelja, uz brze i realne rezultate.",
+      tags: ["Dizajn sajta", "Razvoj"],
+      image: PLACEHOLDER_IMAGE_7,
+      size: "sm",
+      link: "https://blackbird.rs/",
     },
   ],
 };

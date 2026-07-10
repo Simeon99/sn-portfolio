@@ -45,3 +45,32 @@ body {
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out;
 }
+
+/* Inline service preview (mobile): expands the row it occupies while its
+   contents settle in, so the list below never jumps. */
+@keyframes service-preview-in {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+.animate-service-preview {
+  animation: service-preview-in 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animate-service-preview > * > * {
+  animation: fade-in-up 0.5s 0.08s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-service-preview,
+  .animate-service-preview > * > * {
+    animation: none;
+  }
+}

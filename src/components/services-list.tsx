@@ -27,6 +27,14 @@ export function ServicesList() {
   const [hasEntered, setHasEntered] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
+  // Below lg the preview sits inline in the list, so selecting a service
+  // reflows the items underneath a stationary pointer — which would fire more
+  // mouseenter events and cascade the selection down the list. There, only an
+  // explicit tap selects.
+  const selectOnHover = (i: number) => {
+    if (window.matchMedia("(min-width: 1024px)").matches) setActive(i);
+  };
+
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
@@ -65,8 +73,10 @@ export function ServicesList() {
       </div>
 
       <div className="mt-20 grid gap-12 lg:grid-cols-[230px_1fr] lg:gap-16">
-        {/* Preview panel — swaps with a small fade on hover */}
-        <div key={active} className="animate-fade-in-up">
+        {/* Preview panel — swaps with a small fade on hover. Below lg the
+            preview is rendered inline above the active service instead, so it
+            stays in view when a service further down the list is selected. */}
+        <div key={active} className="animate-fade-in-up hidden lg:block">
           <div className="relative aspect-square w-full max-w-[230px] overflow-hidden rounded-lg">
             <Image
               src={services[active].image}
@@ -87,37 +97,60 @@ export function ServicesList() {
         {/* List */}
         <div ref={listRef}>
           {services.map((service, i) => (
-            <button
-              key={service.label}
-              type="button"
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              style={{
-                transitionDelay: hasEntered ? `${i * 120}ms` : "0ms",
-              }}
-              className={`group flex w-full items-center justify-between border-b border-neutral-800 py-6 text-left transition-all duration-700 ease-out sm:py-8 ${hasEntered
-                ? "translate-x-0 opacity-100"
-                : "translate-x-16 opacity-0"
-                }`}
-            >
-              <span
-                className={`min-w-0 shrink text-[clamp(2.25rem,6.5vw,102px)] font-medium tracking-[-0.07em] leading-[1.1] transition-all duration-300 group-hover:translate-x-2 ${i === active ? "text-white" : "text-neutral-800"
+            <div key={service.label}>
+              {i === active && (
+                <div className="animate-service-preview grid grid-rows-[1fr] lg:hidden">
+                  <div className="min-h-0 overflow-hidden">
+                    <div className="flex items-center gap-5 pt-6 pb-2">
+                      <div className="relative size-28 shrink-0 overflow-hidden rounded-lg sm:size-32">
+                        <Image
+                          src={service.image}
+                          alt={service.label}
+                          fill
+                          sizes="(min-width: 640px) 128px, 112px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <p className="text-base leading-snug text-neutral-300">
+                        {service.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setActive(i)}
+                onMouseEnter={() => selectOnHover(i)}
+                onFocus={() => setActive(i)}
+                style={{
+                  transitionDelay: hasEntered ? `${i * 120}ms` : "0ms",
+                }}
+                className={`group flex w-full items-center justify-between border-b border-neutral-800 py-6 text-left transition-all duration-700 ease-out sm:py-8 ${hasEntered
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-16 opacity-0"
                   }`}
               >
-                {service.label}
-              </span>
-              <span className={`shrink-0 text-sm font-semibold transition-colors duration-300 ${i === active ? "" : "text-neutral-700"}`}>
-                {i === active ? (
-                  <>
-                    <span className="text-[#d8472b]">{"{ "}</span>
-                    <span className="text-white">{`0${i + 1}`}</span>
-                    <span className="text-[#d8472b]">{" }"}</span>
-                  </>
-                ) : (
-                  `{ 0${i + 1} }`
-                )}
-              </span>
-            </button>
+                <span
+                  className={`min-w-0 shrink text-[clamp(2.25rem,6.5vw,102px)] font-medium tracking-[-0.07em] leading-[1.1] transition-all duration-300 group-hover:translate-x-2 ${i === active ? "text-white" : "text-neutral-800"
+                    }`}
+                >
+                  {service.label}
+                </span>
+                <span className={`shrink-0 text-sm font-semibold transition-colors duration-300 ${i === active ? "" : "text-neutral-700"}`}>
+                  {i === active ? (
+                    <>
+                      <span className="text-[#d8472b]">{"{ "}</span>
+                      <span className="text-white">{`0${i + 1}`}</span>
+                      <span className="text-[#d8472b]">{" }"}</span>
+                    </>
+                  ) : (
+                    `{ 0${i + 1} }`
+                  )}
+                </span>
+              </button>
+            </div>
           ))}
 
           <a
