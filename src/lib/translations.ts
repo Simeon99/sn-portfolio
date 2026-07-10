@@ -106,7 +106,7 @@ const en = {
       nextOpeningPrefix: "Next opening:",
       nextOpeningTime: "10:00 AM",
       title: "Ready when you are",
-      description: "Book a free 20-minute call and let's talk about your next project.",
+      description: "Book a free 30-minute call and let's talk about your next project.",
       cta: "Book a call",
     },
   },
@@ -357,7 +357,7 @@ const en = {
     ],
     bookTitle: "Ready to start?",
     bookDescription:
-      "Book a free 20-minute call and let's talk about your next project.",
+      "Book a free 30-minute call and let's talk about your next project.",
     bookCta: "Book a call",
     bottomDescription:
       "With S&N, your brand gets more than content. We create video, social, and web experiences that resonate with your audience and drive real results.",
@@ -382,6 +382,7 @@ const en = {
     team: [
       { name: "Simeon", role: "Co-founder, Software Engineer" },
       { name: "Nevena", role: "Co-founder, Marketing Manager" },
+      { name: "Mina", role: "Digital Marketing Strategist, M.A. Marketing" },
     ],
     approach: "Approach",
     approachLarge:
@@ -774,6 +775,7 @@ const sr: typeof en = {
     team: [
       { name: "Simeon", role: "Suosnivač, softverski inženjer" },
       { name: "Nevena", role: "Suosnivač, marketing menadžer" },
+      { name: "Mina", role: "Digital marketing strateg, mast. marketinga" },
     ],
     approach: "Pristup",
     approachLarge:

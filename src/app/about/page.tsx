@@ -23,6 +23,12 @@ const teamMeta = [
     gradient:
       "radial-gradient(at 80% 20%, #b3502f 0%, transparent 55%), radial-gradient(at 20% 80%, #2a3f8f 0%, transparent 55%), #100a24",
   },
+  {
+    initials: "MI",
+    image: "/images/1686827059536.jpg",
+    gradient:
+      "radial-gradient(at 20% 80%, #7a2f8f 0%, transparent 55%), radial-gradient(at 80% 20%, #2f6f8f 0%, transparent 55%), #100a24",
+  },
 ];
 
 export default function AboutPage() {
@@ -157,7 +163,7 @@ export default function AboutPage() {
           </section>
 
           <section className="px-6 pb-24 sm:px-10">
-            <div className="grid gap-6 sm:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <div
                 style={reveal(hasEntered, 0).style}
                 className={`flex flex-col justify-between rounded-2xl border border-neutral-200 p-8 ${reveal(hasEntered, 0).className}`}
@@ -201,7 +207,7 @@ export default function AboutPage() {
                   className={reveal(hasEntered, 120 + i * 100).className}
                 >
                   <div
-                    className="relative aspect-[3/4] overflow-hidden rounded-2xl"
+                    className="relative aspect-[3/5] overflow-hidden rounded-2xl"
                     style={{ background: member.gradient }}
                   >
                     {member.image ? (

@@ -49,9 +49,11 @@ function GrowthChart() {
 }
 
 // The booking week is computed from the real clock: the first opening is
-// always the day after tomorrow, shown inside its surrounding Sunday-first
-// week. Computed lazily on the client (with a static server fallback) so the
-// prerendered HTML never depends on the build machine's date.
+// the day after tomorrow, rolled forward to the following Monday if that
+// falls on a weekend (we don't book Saturdays or Sundays), shown inside its
+// surrounding Sunday-first week. Computed lazily on the client (with a
+// static server fallback) so the prerendered HTML never depends on the
+// build machine's date.
 type BookingWeek = { dates: number[]; selectedIndex: number };
 
 const serverBookingWeek: BookingWeek = {
@@ -65,6 +67,8 @@ function getBookingWeek(): BookingWeek {
   if (!clientBookingWeek) {
     const target = new Date();
     target.setDate(target.getDate() + 2);
+    if (target.getDay() === 6) target.setDate(target.getDate() + 2);
+    else if (target.getDay() === 0) target.setDate(target.getDate() + 1);
     const selectedIndex = target.getDay();
     const dates: number[] = [];
     for (let i = 0; i < 7; i++) {
