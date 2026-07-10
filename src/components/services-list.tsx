@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useT } from "@/lib/language-context";
+import { useReveal } from "@/lib/use-reveal";
 
 // Placeholder photo — swap each entry's image with your own asset per service
 const PLACEHOLDER_IMAGE_1 = "/images/b9b8e20333da0c5ec8cb95715c7fcc79.jpg";
@@ -24,8 +25,7 @@ export function ServicesList() {
     image: serviceImages[i],
   }));
   const [active, setActive] = useState(0);
-  const [hasEntered, setHasEntered] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
+  const { ref: listRef, hasEntered } = useReveal<HTMLDivElement>({ threshold: 0.3 });
 
   // Below lg the preview sits inline in the list, so selecting a service
   // reflows the items underneath a stationary pointer — which would fire more
@@ -34,29 +34,6 @@ export function ServicesList() {
   const selectOnHover = (i: number) => {
     if (window.matchMedia("(min-width: 1024px)").matches) setActive(i);
   };
-
-  useEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section id="services" className="relative z-10 overflow-x-hidden bg-neutral-950 px-6 py-24 text-white sm:px-10">

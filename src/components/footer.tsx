@@ -1,38 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/language-context";
 import { BOOKING_URL, CONTACT_EMAILS, CONTACT_PHONE } from "@/lib/site-config";
+import { useReveal } from "@/lib/use-reveal";
 
 export function Footer() {
   const t = useT();
   const links = t.footer.links;
-  const [hasEntered, setHasEntered] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref, hasEntered } = useReveal<HTMLDivElement>({ threshold: 0.15 });
 
   return (
     <footer className="relative z-10 bg-neutral-100 px-6 py-16 sm:px-10">

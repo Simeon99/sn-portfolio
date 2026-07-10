@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { getProjects, type Project } from "@/data/projects";
 import { ProjectCard, reveal } from "@/components/project-card";
 import { useT, useLanguage } from "@/lib/language-context";
+import { useReveal } from "@/lib/use-reveal";
 
 function ProjectRow({
   lg,
@@ -28,31 +28,7 @@ export function SelectedWork() {
   const t = useT();
   const { lang } = useLanguage();
   const projects = getProjects(lang);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [hasEntered, setHasEntered] = useState(false);
-
-  useEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref: gridRef, hasEntered } = useReveal<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section className="relative z-10 bg-white">

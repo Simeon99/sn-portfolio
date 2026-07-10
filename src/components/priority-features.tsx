@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { useT } from "@/lib/language-context";
 import { BOOKING_URL } from "@/lib/site-config";
+import { useReveal } from "@/lib/use-reveal";
 
 function CheckIcon() {
   return (
@@ -122,31 +123,7 @@ export function PriorityFeatures() {
     getBookingWeek,
     getServerBookingWeek,
   );
-  const [hasEntered, setHasEntered] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref: gridRef, hasEntered } = useReveal<HTMLDivElement>({ threshold: 0.15 });
 
   return (
     <section className="relative z-10 bg-white px-6 py-24 sm:px-10">

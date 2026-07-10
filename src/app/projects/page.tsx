@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Footer } from "@/components/footer";
 import { MenuOverlay } from "@/components/menu-overlay";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -20,31 +20,15 @@ function ProjectsPageContent() {
   const projects = getProjects(lang);
   const filters = [t.projectsPage.allFilter, ...getProjectCategories(lang)];
   const [filter, setFilter] = useState(t.projectsPage.allFilter);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [hasEntered, setHasEntered] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Cards reveal as soon as the page loads instead of waiting for the grid
+  // to scroll into view — the grid can sit close to the fold, so a
+  // scroll-triggered reveal here just reads as "nothing loaded".
+  const [hasEntered, setHasEntered] = useState(false);
   useEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
+    const frame = requestAnimationFrame(() => setHasEntered(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const filtered =
@@ -125,7 +109,6 @@ function ProjectsPageContent() {
 
           <div
             key={filter}
-            ref={gridRef}
             className="animate-fade-in-up mt-16 grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2"
           >
             {filtered.map((project, i) => (

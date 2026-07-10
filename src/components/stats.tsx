@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useT } from "@/lib/language-context";
+import { useReveal } from "@/lib/use-reveal";
 
 function parseValue(raw: string) {
   const match = raw.match(/^([^\d.]*)([\d.]+)(.*)$/);
@@ -85,26 +86,10 @@ function StatItem({
 
 export function Stats() {
   const t = useT();
-  const sectionRef = useRef<HTMLElement>(null);
-  const [start, setStart] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStart(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref: sectionRef, hasEntered: start } = useReveal<HTMLElement>({
+    threshold: 0.15,
+    rootMargin: "0px 0px -10% 0px",
+  });
 
   return (
     <section

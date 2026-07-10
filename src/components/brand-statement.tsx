@@ -1,35 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/language-context";
+import { useReveal } from "@/lib/use-reveal";
 
 export function BrandStatement() {
   const t = useT();
-  const [hasEntered, setHasEntered] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const { ref: sectionRef, hasEntered } = useReveal<HTMLElement>({ threshold: 0.3 });
 
   return (
     <section

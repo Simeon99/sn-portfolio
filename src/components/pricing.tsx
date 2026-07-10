@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useT } from "@/lib/language-context";
 import { BOOKING_URL } from "@/lib/site-config";
+import { useReveal } from "@/lib/use-reveal";
 
 type PlanPricing =
   | { kind: "retainer"; monthly: number; annual: number }
@@ -190,8 +191,7 @@ export function Pricing() {
   const t = useT();
   const [tab, setTab] = useState<"social" | "web">("social");
   const [annual, setAnnual] = useState(true);
-  const [hasEntered, setHasEntered] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const { ref: gridRef, hasEntered } = useReveal<HTMLDivElement>({ threshold: 0.15 });
 
   const plans: Plan[] =
     tab === "social"
@@ -221,29 +221,6 @@ export function Pricing() {
           features: plan.features,
           highlighted: webMeta[i].highlighted,
         }));
-
-  useEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const frame = requestAnimationFrame(() => setHasEntered(true));
-      return () => cancelAnimationFrame(frame);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section id="pricing" className="relative z-10 bg-white py-24">
