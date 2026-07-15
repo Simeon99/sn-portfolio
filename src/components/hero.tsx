@@ -125,11 +125,14 @@ export function Hero() {
           {/* Headline */}
           <div className="relative z-10 mt-4 flex flex-1 flex-col justify-end px-6 pb-16 sm:px-10">
             <div className="grid gap-12 lg:grid-cols-[1fr_auto]">
-              <h1 className="font-sans text-[clamp(3rem,11vw,10rem)] leading-[1.4] font-bold tracking-[-0.06em]">
-                <span className="bg-gradient-to-r from-amber-300 via-amber-100 to-cyan-200 bg-[length:106%_100%] bg-clip-text block text-transparent">
+              <h1 className="font-sans leading-[1.4] font-bold tracking-[-0.06em]">
+                <span className="bg-gradient-to-r from-amber-300 via-amber-100 to-cyan-200 bg-[length:106%_100%] bg-clip-text block text-[clamp(3rem,11vw,10rem)] text-transparent">
                   {t.hero.headlineTop}
                 </span>
-                <span className="-mt-[0.5em] block">
+                {/* Smaller max size than the line above — two words need to
+                    fit on one line here, so it can't scale all the way up to
+                    the single-word line's size without wrapping. */}
+                <span className="-mt-[0.3em] block text-[clamp(2rem,8.5vw,7rem)] whitespace-nowrap">
                   <span className="bg-gradient-to-r from-white via-cyan-100 to-orange-400 bg-[length:106%_100%] bg-clip-text text-transparent">
                     {t.hero.headlineBottomLeft}
                   </span>{" "}
