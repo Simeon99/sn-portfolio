@@ -2,6 +2,7 @@
 
 import { useT } from "@/lib/language-context";
 import { useReveal } from "@/lib/use-reveal";
+import { Logo } from "@/components/logo";
 
 export function BrandStatement() {
   const t = useT();
@@ -31,13 +32,13 @@ export function BrandStatement() {
 
       <span
         style={{ transitionDelay: hasEntered ? "120ms" : "0ms" }}
-        className={`relative text-4xl font-extrabold tracking-tight transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] sm:text-5xl ${
+        className={`relative block transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
           hasEntered
             ? "translate-y-0 opacity-100"
             : "translate-y-8 opacity-0 motion-reduce:translate-y-0"
         }`}
       >
-        S&N<sup className="text-lg font-bold sm:text-xl">®</sup>
+        <Logo tone="light" className="h-9 w-auto sm:h-12" />
       </span>
 
       {/* Sits on the section's bottom border line, straddling into the

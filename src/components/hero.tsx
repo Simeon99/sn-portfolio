@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MenuOverlay } from "@/components/menu-overlay";
 import { LanguageToggle } from "@/components/language-toggle";
+import { Logo } from "@/components/logo";
 import { PROJECT_COUNT } from "@/data/projects";
 import { useT } from "@/lib/language-context";
 
@@ -78,9 +79,7 @@ export function Hero() {
 
         {/* Nav */}
         <header className="relative z-10 flex items-center justify-between px-6 pt-6 sm:px-10">
-          <span className="text-lg font-bold tracking-tight">
-            S&N<sup className="text-xs">®</sup>
-          </span>
+          <Logo tone="dark" className="h-5 w-auto" />
 
           <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
             {navLinks.map((link) => (

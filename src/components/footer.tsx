@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useT } from "@/lib/language-context";
 import { BOOKING_URL, CONTACT_EMAILS, CONTACT_PHONE } from "@/lib/site-config";
 import { useReveal } from "@/lib/use-reveal";
+import { Logo } from "@/components/logo";
 
 export function Footer() {
   const t = useT();
@@ -21,9 +22,7 @@ export function Footer() {
       >
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1.4fr_auto] lg:gap-8">
           <div>
-            <span className="block text-[clamp(3.5rem,9vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] text-neutral-950">
-              S&N<sup className="text-[0.3em]">&reg;</sup>
-            </span>
+            <Logo tone="light" className="h-[clamp(3.5rem,9vw,9rem)] w-auto" />
           </div>
 
           <div>

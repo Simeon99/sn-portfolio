@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Footer } from "@/components/footer";
 import { MenuOverlay } from "@/components/menu-overlay";
 import { LanguageToggle } from "@/components/language-toggle";
+import { Logo } from "@/components/logo";
 import { reveal } from "@/components/project-card";
 import { useT } from "@/lib/language-context";
 import { BOOKING_URL } from "@/lib/site-config";
@@ -46,8 +47,8 @@ export default function AboutPage() {
       <main className="flex-1 bg-white text-neutral-950">
         <div className="relative">
           <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
-            <Link href="/" className="text-lg font-bold tracking-tight">
-              S&N<sup className="text-xs">®</sup>
+            <Link href="/">
+              <Logo tone="light" className="h-5 w-auto" />
             </Link>
 
             <nav className="hidden items-center gap-10 text-sm font-semibold tracking-wide uppercase md:flex">
@@ -145,8 +146,8 @@ export default function AboutPage() {
                 style={reveal(hasEntered, 0).style}
                 className={`flex flex-col justify-between rounded-2xl border border-neutral-200 p-8 ${reveal(hasEntered, 0).className}`}
               >
-                <span className="flex items-center gap-1 text-sm font-bold tracking-tight">
-                  S&N<sup className="text-xs">®</sup>
+                <span className="flex items-center gap-1">
+                  <Logo tone="light" className="h-4 w-auto" />
                   <span aria-hidden="true" className="ml-auto text-[#d8472b]">
                     ⌐
                   </span>

@@ -5,6 +5,7 @@ import { PROJECT_COUNT } from "@/data/projects";
 import { useT } from "@/lib/language-context";
 import { CONTACT_EMAILS, CONTACT_PHONE } from "@/lib/site-config";
 import { LanguageToggle } from "@/components/language-toggle";
+import { Logo } from "@/components/logo";
 
 export function MenuOverlay({
   open,
@@ -32,9 +33,7 @@ export function MenuOverlay({
         }`}
     >
       <div className="flex items-start justify-between">
-        <span className="text-lg font-bold tracking-tight">
-          S&N<sup className="text-xs">®</sup>
-        </span>
+        <Logo tone="dark" variant="mini" className="h-8 w-auto" />
 
         <div className="flex items-center gap-4">
           <LanguageToggle />

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useT } from "@/lib/language-context";
 import { useReveal } from "@/lib/use-reveal";
+import { Logo } from "@/components/logo";
 
 // Placeholder photo — swap each entry's image with your own asset per service
 const PLACEHOLDER_IMAGE_1 = "/images/b9b8e20333da0c5ec8cb95715c7fcc79.jpg";
@@ -38,9 +39,7 @@ export function ServicesList() {
   return (
     <section id="services" className="relative z-10 overflow-x-hidden bg-neutral-950 px-6 py-24 text-white sm:px-10">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-bold tracking-tight">
-          S&N<sup className="text-xs">®</sup>
-        </span>
+        <Logo tone="dark" className="h-5 w-auto" />
         <span className="flex items-center gap-2 text-sm font-semibold tracking-wide text-neutral-300 uppercase">
           <span aria-hidden="true" className="text-[#d8472b]">
             ⌐
